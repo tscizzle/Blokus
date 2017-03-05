@@ -360,7 +360,3 @@ describe('placing a transformed piece', function() {
     });
   });
 });
-
-/* perhaps wait to test these until the new `game` object exists */
-// TODO: test currentPlayer
-// TODO: test availablePieces

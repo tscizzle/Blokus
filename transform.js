@@ -1,11 +1,6 @@
 const _ = require('lodash');
 
 
-// for handling negative rotations, need a mod operation which handles negative n correctly
-// http://stackoverflow.com/a/17323608/3391108
-const mod = (n, k) => ((n % k) + k) % k;
-
-
 const flip = shape => {
   const dimension = shape.length;
   const flippedShape = _.cloneDeep(shape);
@@ -47,6 +42,11 @@ const rotate = (shape, rotations = 0) => {
   _.times(rotations, () => rotatedShape = rotateOnce(rotatedShape));
   return rotatedShape;
 };
+
+
+// for handling negative rotations, need a mod operation which handles negative n correctly
+// http://stackoverflow.com/a/17323608/3391108
+const mod = (n, k) => ((n % k) + k) % k;
 
 
 module.exports = {
