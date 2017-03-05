@@ -1,18 +1,17 @@
 const _ = require('lodash');
 
 
-const flipOnce = shape => {
-  const dimension = shape.length;
-  const newShape = _.cloneDeep(shape);
-  _.each(shape, (row, rowIdx) => _.each(row, (cell, colIdx) => newShape[dimension - 1 - rowIdx][dimension - 1 - colIdx] = cell));
-  return newShape;
-};
+// for handling negative rotations, need a mod operation which handles negative n correctly
+// http://stackoverflow.com/a/17323608/3391108
+const mod = (n, k) => ((n % k) + k) % k;
 
-const flip = (shape, flips = 0) => {
-  let flippedShape = shape;
-  _.times(flips, () => flippedShape = flipOnce(flippedShape));
+
+const flip = shape => {
+  const dimension = shape.length;
+  const flippedShape = _.cloneDeep(shape);
+  _.each(shape, (row, rowIdx) => _.each(row, (cell, colIdx) => flippedShape[rowIdx][dimension - 1 - colIdx] = cell));
   return flippedShape;
-}
+};
 
 const rotateOnce = shape => {
   /*
@@ -43,6 +42,7 @@ const rotateOnce = shape => {
 };
 
 const rotate = (shape, rotations = 0) => {
+  rotations = mod(rotations, 4);
   let rotatedShape = shape;
   _.times(rotations, () => rotatedShape = rotateOnce(rotatedShape));
   return rotatedShape;

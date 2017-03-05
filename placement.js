@@ -5,22 +5,18 @@ const { flip,
 
 
 const getShapePositions = (shape, position) => {
-  const shapePositions = _.reduce(shape, (shapePositionsSoFar, row, rowIdx) => {
-    const rowShapePositions = _.reduce(row, (rowShapePositionsSoFar, cell, colIdx) => {
-      if (cell === 'X') {
-        rowShapePositionsSoFar.push({row: position.row + rowIdx, col: position.col + colIdx});
-      }
-      return rowShapePositionsSoFar;
-    }, []);
-    shapePositionsSoFar.push(...rowShapePositions);
-    return shapePositionsSoFar;
-  }, []);
+  const shapePositions = [];
+  _.each(shape, (row, rowIdx) => _.each(row, (cell, colIdx) => {
+    if (cell === 'X') {
+      shapePositions.push({row: position.row + rowIdx, col: position.col + colIdx});
+    }
+  }));
   return shapePositions;
 };
 
-const getPlacementPositions = (piece, flips, rotations, position) => {
+const getPlacementPositions = (piece, flipped, rotations, position) => {
   const { shape } = piece;
-  const flippedShape = flip(shape, flips);
+  const flippedShape = flipped ? flip(shape) : shape;
   const flippedRotatedShape = rotate(flippedShape, rotations);
   const placementPositions = getShapePositions(flippedRotatedShape, position);
   return placementPositions;
@@ -67,7 +63,7 @@ const isInCorner = (position, board) => {
     {row: height - 1, col: 0},
     {row: height - 1, col: width - 1},
   ];
-  return _.includes(corners, position);
+  return !_.isUndefined(_.find(corners, position));
 };
 
 const validatePiece = piece => {
@@ -75,7 +71,7 @@ const validatePiece = piece => {
   if (piece.used) throw 'PieceAlreadyUsed';
 };
 
-const validatePlacementPositions = positions => {
+const validatePlacementPositions = (positions, board, player, turns) => {
   const anyPositionsOutOfBounds = _.some(positions, pos => isOutOfBounds(pos, board));
   if (anyPositionsOutOfBounds) throw 'OutOfBounds';
 
@@ -96,17 +92,15 @@ const validatePlacementPositions = positions => {
 };
 
 const getPlaceFunction = (pieces, board, turns) => {
-  const placeFunction = placement => {
-    placement = _.cloneDeep(placement);
-    const { player, piece, flips, rotations, position } = placement;
-
+  const placeFunction = ({player, piece, flipped = false, rotations = 0, position}) => {
     const matchingPiece = _.find(pieces, {id: piece, player});
     validatePiece(matchingPiece);
 
-    const placementPositions = getPlacementPositions(matchingPiece, flips, rotations, position);
-    validatePlacementPositions(placementPositions);
+    const placementPositions = getPlacementPositions(matchingPiece, flipped, rotations, position);
+    validatePlacementPositions(placementPositions, board, player, turns);
 
     _.each(placementPositions, ({row, col}) => board[row][col] = player);
+    const placement = _.cloneDeep({player, piece, flipped, rotations, position});
     turns.push(placement);
     matchingPiece.used = true;
     return true;

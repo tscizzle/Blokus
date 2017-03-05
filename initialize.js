@@ -3,26 +3,9 @@ const _ = require('lodash');
 const { pieceCollection } = require('./pieces');
 
 
-const processOptions = options => {
-  let { height, width, players } = options;
-  height = height || 20;
-  width = width || 20;
-  players = players || [];
-  const playerStartingPositions = [
-    {row: 0, col: 0},
-    {row: 1, col: 0},
-    {row: 1, col: 1},
-    {row: 0, col: 1},
-  ];
+const processOptions = ({height = 20, width = 20, players = []}) => {
   players = _.map(_.range(4), playerID => {
-    return {
-      id: playerID,
-      name: players[playerID] || `Player ${playerID}`,
-      startingPosition: {
-        row: playerStartingPositions[playerID].row * (height - 1),
-        col: playerStartingPositions[playerID].col * (width - 1),
-      },
-    };
+    return {id: playerID, name: players[playerID] || `Player ${playerID}`};
   });
   return {height, width, players};
 };
