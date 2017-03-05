@@ -67,43 +67,47 @@ const isInCorner = (position, board) => {
 };
 
 const validatePiece = piece => {
-  if (!piece) throw 'PieceDoesNotExist';
-  if (piece.used) throw 'PieceAlreadyUsed';
+  if (!piece) return 'PieceDoesNotExist';
+  if (piece.used) return 'PieceAlreadyUsed';
 };
 
 const validatePlacementPositions = (positions, board, player, turns) => {
   const anyPositionsOutOfBounds = _.some(positions, pos => isOutOfBounds(pos, board));
-  if (anyPositionsOutOfBounds) throw 'OutOfBounds';
+  if (anyPositionsOutOfBounds) return 'OutOfBounds';
 
   const anyTakenPositions = _.some(positions, pos => isTaken(pos, board));
-  if (anyTakenPositions) throw 'Taken';
+  if (anyTakenPositions) return 'Taken';
 
   const anyPositionsAdjacentToSamePlayer = _.some(positions, pos => isAdjacentToSamePlayer(pos, board, player));
-  if (anyPositionsAdjacentToSamePlayer) throw 'AdjacentToSamePlayer';
+  if (anyPositionsAdjacentToSamePlayer) return 'AdjacentToSamePlayer';
 
   const isPlayersFirstMove = _.isUndefined(_.find(turns, {player}));
   if (!isPlayersFirstMove) {
     const noPositionsDiagonalFromSamePlayer = !_.some(positions, pos => isDiagonalFromSamePlayer(pos, board, player));
-    if (noPositionsDiagonalFromSamePlayer) throw 'NotDiagonalFromSamePlayer';
+    if (noPositionsDiagonalFromSamePlayer) return 'NotDiagonalFromSamePlayer';
   } else {
     const noPositionsInCorner = !_.some(positions, pos => isInCorner(pos, board));
-    if (noPositionsInCorner) throw 'NotInCorner';
+    if (noPositionsInCorner) return 'NotInCorner';
   }
 };
 
 const getPlaceFunction = (pieces, board, turns) => {
-  const placeFunction = ({player, piece, flipped = false, rotations = 0, position}) => {
+  const placeFunction = ({player, piece, flipped = false, rotations = 0, position, probe = false}) => {
     const matchingPiece = _.find(pieces, {id: piece, player});
-    validatePiece(matchingPiece);
+    const pieceValidation = validatePiece(matchingPiece);
+    if (_.isString(pieceValidation)) return {failure: true, message: pieceValidation};
 
     const placementPositions = getPlacementPositions(matchingPiece, flipped, rotations, position);
-    validatePlacementPositions(placementPositions, board, player, turns);
+    const placementPositionsValidation = validatePlacementPositions(placementPositions, board, player, turns);
+    if (_.isString(placementPositionsValidation)) return {failure: true, message: placementPositionsValidation};
 
-    _.each(placementPositions, ({row, col}) => board[row][col] = player);
-    const placement = _.cloneDeep({player, piece, flipped, rotations, position});
-    turns.push(placement);
-    matchingPiece.used = true;
-    return true;
+    if (!probe) {
+      _.each(placementPositions, ({row, col}) => board[row][col] = player);
+      const placement = _.cloneDeep({player, piece, flipped, rotations, position});
+      turns.push(placement);
+      matchingPiece.used = true;
+    }
+    return {success: true, positions: placementPositions};
   };
   return placeFunction;
 };

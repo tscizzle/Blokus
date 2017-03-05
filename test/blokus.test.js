@@ -5,7 +5,11 @@ const _ = require('lodash');
 const blokus = require('../blokus');
 
 
-const assertExpectedPositions = (board, expectedPositions) => {
+const assertPositionsEqual = (positions, expectedPositions) => {
+  assert.deepEqual(_.sortBy(positions, ['row', 'col']), _.sortBy(expectedPositions, ['row', 'col']));
+};
+
+const assertBoardState = (board, expectedPositions) => {
   _.each(board, (row, rowIdx) => _.each(row, (cell, colIdx) => {
     const positionMsg = `for position (${rowIdx}, ${colIdx})`;
     if (!_.isUndefined(_.find(expectedPositions, {row: rowIdx, col: colIdx}))) assert.isNotNull(cell, positionMsg)
@@ -110,46 +114,79 @@ describe('instantiating a blokus', function() {
 
 describe('taking a turn', function() {
   const b = blokus();
-  b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
+  const { success, positions } = b.place({player: 0, piece: 3, position: {row: 0, col: 0}});
   const pieces = b.pieces();
   const board = b.board();
   const turns = b.turns();
 
+  it('should be able to place a piece', function() {
+    assert.isTrue(success);
+  });
+
   it('should place a piece in the right position', function() {
-    const expectedPositions = [{row: 0, col: 0}];
-    assertExpectedPositions(board, expectedPositions);
+    const expectedPositions = [
+      {row: 0, col: 0},
+      {row: 1, col: 0},
+      {row: 1, col: 1},
+    ];
+    assertPositionsEqual(positions, expectedPositions);
+    assertBoardState(board, expectedPositions);
   });
 
   it('should place the right player\'s piece', function() {
-    assert.equal(board[0][0], 0);
+    _.each(positions, ({row, col}) => assert.equal(board[row][col], 0));
   });
 
   it('should save the placement as a turn', function() {
     assert.lengthOf(turns, 1);
     assert.deepEqual(turns, [
-      {player: 0, piece: 0, flipped: false, rotations: 0, position: {row: 0, col: 0}},
+      {player: 0, piece: 3, flipped: false, rotations: 0, position: {row: 0, col: 0}},
     ]);
   });
 
   it('should mark the piece as used', function() {
-    const matchingPiece = _.find(pieces, {player: 0, id: 0});
+    const matchingPiece = _.find(pieces, {player: 0, id: 3});
     assert.isTrue(matchingPiece.used);
   });
 
   it('should not be able to place a piece that doesn\'t exist', function() {
-    assert.throws(() => b.place({player: 0, piece: 100, position: {row: 1, col: 1}}), 'PieceDoesNotExist');
+    const oldBoard = b.board();
+    const { failure, message } = b.place({player: 0, piece: 100, position: {row: 1, col: 1}});
+    const newBoard = b.board();
+
+    assert.isTrue(failure);
+    assert.equal(message, 'PieceDoesNotExist');
+    assert.deepEqual(oldBoard, newBoard);
   });
 
   it('should not be able to place a piece that was already used', function() {
-    assert.throws(() => b.place({player: 0, piece: 0, position: {row: 1, col: 1}}), 'PieceAlreadyUsed');
+    const oldBoard = b.board();
+    const { failure, message } = b.place({player: 0, piece: 3, position: {row: 1, col: 1}});
+    const newBoard = b.board();
+
+    assert.isTrue(failure);
+    assert.equal(message, 'PieceAlreadyUsed');
+    assert.deepEqual(oldBoard, newBoard);
   });
 
   it('should not be able to place a piece with any cells out of bounds', function() {
-    assert.throws(() => b.place({player: 0, piece: 1, position: {row: 19, col: 0}}), 'OutOfBounds');
+    const oldBoard = b.board();
+    const { failure, message } = b.place({player: 0, piece: 1, position: {row: 19, col: 0}});
+    const newBoard = b.board();
+
+    assert.isTrue(failure);
+    assert.equal(message, 'OutOfBounds');
+    assert.deepEqual(oldBoard, newBoard);
   });
 
   it('should not be able to place a piece on top of another piece', function() {
-    assert.throws(() => b.place({player: 0, piece: 1, position: {row: 0, col: 0}}), 'Taken');
+    const oldBoard = b.board();
+    const { failure, message } = b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
+    const newBoard = b.board();
+
+    assert.isTrue(failure);
+    assert.equal(message, 'Taken');
+    assert.deepEqual(oldBoard, newBoard);
   });
 });
 
@@ -157,7 +194,13 @@ describe('taking a first turn', function() {
   const b = blokus();
 
   it('should not be able to place a piece anywhere but the corner', function() {
-    assert.throws(() => b.place({player: 0, piece: 0, position: {row: 1, col: 0}}), 'NotInCorner');
+    const oldBoard = b.board();
+    const { failure, message } = b.place({player: 0, piece: 0, position: {row: 1, col: 0}});
+    const newBoard = b.board();
+
+    assert.isTrue(failure);
+    assert.equal(message, 'NotInCorner');
+    assert.deepEqual(oldBoard, newBoard);
   });
 });
 
@@ -172,16 +215,66 @@ describe('taking a subsequent turn', function() {
   _.each(placements, b.place);
 
   it('should be able to place a piece diagonal from one of the player\'s previous pieces', function() {
-    const placementHappened = b.place({player: 0, piece: 1, position: {row: 1, col: 1}});
-    assert.isTrue(placementHappened);
+    const { success } = b.place({player: 0, piece: 1, position: {row: 1, col: 1}});
+    assert.isTrue(success);
   });
 
   it('should not be able to place a piece somewhere not diagonal from one of the player\'s previous pieces', function() {
-    assert.throws(() => b.place({player: 1, piece: 1, position: {row: 1, col: 17}}), 'NotDiagonalFromSamePlayer');
+    const oldBoard = b.board();
+    const { failure, message } = b.place({player: 1, piece: 1, position: {row: 1, col: 17}});
+    const newBoard = b.board();
+
+    assert.isTrue(failure);
+    assert.equal(message, 'NotDiagonalFromSamePlayer');
+    assert.deepEqual(oldBoard, newBoard);
   });
 
   it('should not be able to place a piece that shares a border with one of the player\'s previous pieces', function() {
-    assert.throws(() => b.place({player: 1, piece: 1, position: {row: 0, col: 18}}), 'AdjacentToSamePlayer');
+    const oldBoard = b.board();
+    const { failure, message } = b.place({player: 1, piece: 1, position: {row: 0, col: 18}});
+    const newBoard = b.board();
+
+    assert.isTrue(failure);
+    assert.equal(message, 'AdjacentToSamePlayer');
+    assert.deepEqual(oldBoard, newBoard);
+  });
+});
+
+describe('probing a placement', function() {
+  const b = blokus();
+
+  it('should give the usual success response but not change the game state', function() {
+    const oldPieces = b.pieces();
+    const oldBoard = b.board();
+    const oldTurns = b.turns();
+    const { success, positions } = b.place({player: 0, piece: 3, position: {row: 0, col: 0}, probe: true});
+    const newPieces = b.pieces();
+    const newBoard = b.board();
+    const newTurns = b.turns();
+
+    assert.isTrue(success);
+    const expectedPositions = [
+      {row: 0, col: 0},
+      {row: 1, col: 0},
+      {row: 1, col: 1},
+    ];
+    assertPositionsEqual(positions, expectedPositions);
+    assert.deepEqual(oldPieces, newPieces);
+    assert.deepEqual(oldBoard, newBoard);
+    assert.deepEqual(oldTurns, newTurns);
+  });
+
+  it('should give the usual failure response', function() {
+    const oldPieces = b.pieces();
+    const oldBoard = b.board();
+    const oldTurns = b.turns();
+    const { failure, message } = b.place({player: 0, piece: 3, position: {row: 20, col: 0}, probe: true});
+    const newPieces = b.pieces();
+    const newBoard = b.board();
+    const newTurns = b.turns();
+
+    assert.isTrue(failure);
+    assert.equal(message, 'OutOfBounds');
   });
 });
 
@@ -190,18 +283,16 @@ describe('placing a transformed piece', function() {
     it('should reflect the piece horizontally', function() {
       const b = blokus();
       b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
-      b.place({player: 0, piece: 18, flipped: true, position: {row: 1, col: 0}});
-      const board = b.board();
+      const { positions } = b.place({player: 0, piece: 18, flipped: true, position: {row: 1, col: 0}});
 
       const expectedPositions = [
-        {row: 0, col: 0},
         {row: 1, col: 1},
         {row: 1, col: 2},
         {row: 2, col: 1},
         {row: 2, col: 2},
         {row: 3, col: 2},
       ];
-      assertExpectedPositions(board, expectedPositions);
+      assertPositionsEqual(positions, expectedPositions);
     });
   });
 
@@ -209,52 +300,46 @@ describe('placing a transformed piece', function() {
     it('should rotate the piece a quarter rotation counterclockwise', function() {
       const b = blokus();
       b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
-      b.place({player: 0, piece: 18, rotations: 1, position: {row: 0, col: 1}});
-      const board = b.board();
+      const { positions } = b.place({player: 0, piece: 18, rotations: 1, position: {row: 0, col: 1}});
 
       const expectedPositions = [
-        {row: 0, col: 0},
         {row: 1, col: 1},
         {row: 1, col: 2},
         {row: 2, col: 1},
         {row: 2, col: 2},
         {row: 2, col: 3},
       ];
-      assertExpectedPositions(board, expectedPositions);
+      assertPositionsEqual(positions, expectedPositions);
     });
 
     it('should be able to do multiple rotations', function() {
       const b = blokus();
       b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
-      b.place({player: 0, piece: 18, rotations: 2, position: {row: 0, col: 0}});
-      const board = b.board();
+      const { positions } = b.place({player: 0, piece: 18, rotations: 2, position: {row: 0, col: 0}});
 
       const expectedPositions = [
-        {row: 0, col: 0},
         {row: 0, col: 2},
         {row: 1, col: 1},
         {row: 1, col: 2},
         {row: 2, col: 1},
         {row: 2, col: 2},
       ];
-      assertExpectedPositions(board, expectedPositions);
+      assertPositionsEqual(positions, expectedPositions);
     });
 
     it('should be able to do negative rotations', function() {
       const b = blokus();
       b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
-      b.place({player: 0, piece: 18, rotations: -1, position: {row: 1, col: 1}});
-      const board = b.board();
+      const { positions } = b.place({player: 0, piece: 18, rotations: -1, position: {row: 1, col: 1}});
 
       const expectedPositions = [
-        {row: 0, col: 0},
         {row: 1, col: 1},
         {row: 1, col: 2},
         {row: 1, col: 3},
         {row: 2, col: 2},
         {row: 2, col: 3},
       ];
-      assertExpectedPositions(board, expectedPositions);
+      assertPositionsEqual(positions, expectedPositions);
     });
   });
 
@@ -262,18 +347,16 @@ describe('placing a transformed piece', function() {
     it('should first flip a piece and then rotate it (this order matters)', function() {
       const b = blokus();
       b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
-      b.place({player: 0, piece: 18, flipped: true, rotations: 1, position: {row: 1, col: 1}});
-      const board = b.board();
+      const { positions } = b.place({player: 0, piece: 18, flipped: true, rotations: 1, position: {row: 1, col: 1}});
 
       const expectedPositions = [
-        {row: 0, col: 0},
         {row: 1, col: 1},
         {row: 1, col: 2},
         {row: 1, col: 3},
         {row: 2, col: 1},
         {row: 2, col: 2},
       ];
-      assertExpectedPositions(board, expectedPositions);
+      assertPositionsEqual(positions, expectedPositions);
     });
   });
 });
