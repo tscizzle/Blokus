@@ -27,7 +27,7 @@ const myBlokus = new blokus();
 const myBlokus = new blokus({
   height: 20,
   width: 20,
-  players: ['Tyler', 'Abby', 'Josh', 'Pre'],
+  players: ['Tyler', 'Bob'],
 });
 ```
 
