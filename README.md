@@ -82,6 +82,7 @@ myBlokus.place({
   flipped: false, // (optional) whether or not to horizontally reflect the piece
   rotations: 3, // (optional) how many times to rotate the piece counterclockwise
   position: {row: 0, col: 0}, // the board cell where the top left cell of the piece's 'shape' goes
+  probe: false, // (optional) if true then still check the move's validity but don't perform the move
 });
 
 // the 'shape' may have extra padding ('O's that aren't really necessary)
@@ -93,17 +94,6 @@ myBlokus.place({
 // otherwise, 'place' places the piece on the board and returns an object of form:
 //    {success: true, positions: [{row: 3, col: 6}, ...]}
 // where 'positions' is a list of cells the placed piece now occupies
-
-// add {probe: true} to the placement argument to check validity of a move without actually performing it
-
-myBlokus.place({
-  player: 1,
-  piece: 2,
-  position: {row: 0, col: 0},
-  probe: true,
-});
-
-// still returns failure (and an error message) or success (and the placement positions)
 ```
 
 
