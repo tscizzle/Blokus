@@ -11,10 +11,13 @@ Installation
 Usage
 -----
 
+    ```javascript
     const blokus = require('blokus');
+    ```
 
     /* start a game */
 
+    ```javascript
     // default game
 
     const myBlokus = new blokus();
@@ -26,9 +29,11 @@ Usage
       width: 20,
       players: ['Tyler', 'Abby', 'Josh', 'Pre'],
     });
+    ```
 
     /* read the game state */
 
+    ```javascript
     // players
 
     const players = myBlokus.players();
@@ -64,9 +69,11 @@ Usage
 
     // turn fields: ['player', 'piece', 'flipped', 'rotations', 'position']
     // e.g. {player: 0, piece: 5, flipped: true, rotations: 2, position: {row: 4, col: 7}}
+    ```
 
     /* placing a piece */
 
+    ```javascript
     myBlokus.place({
       player: 1, // 'id' field of the player
       piece: 2, // 'id' field of the piece
@@ -95,5 +102,6 @@ Usage
     });
 
     // still returns failure (and an error message) or success (and the placement positions)
+    ```
 
 
