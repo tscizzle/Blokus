@@ -1,5 +1,5 @@
 # Blokus
-The game, "Blokus", in Javascript
+The game *Blokus* in Javascript
 
 
 Installation
@@ -15,7 +15,7 @@ Usage
 const blokus = require('blokus');
 ```
 
-/* start a game */
+Start a game
 
 ```javascript
 // default game
@@ -31,7 +31,7 @@ const myBlokus = new blokus({
 });
 ```
 
-/* read the game state */
+Read the game state
 
 ```javascript
 // players
@@ -71,7 +71,7 @@ const turns = myBlokus.turns();
 // e.g. {player: 0, piece: 5, flipped: true, rotations: 2, position: {row: 4, col: 7}}
 ```
 
-/* placing a piece */
+Placing a piece
 
 ```javascript
 myBlokus.place({
