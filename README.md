@@ -25,9 +25,9 @@ const myBlokus = new blokus();
 // custom game (can change board dimensions, player names)
 
 const myBlokus = new blokus({
-  height: 20,
-  width: 20,
-  players: ['Tyler', 'Bob'],
+  height: 20, (optional, default is 20)
+  width: 20, (optional, default is 20)
+  players: ['Tyler', 'Bob'], (optional, and gets filled up to 4 players if fewer than 4 are specified)
 });
 ```
 
@@ -45,12 +45,14 @@ const players = myBlokus.players();
 
 const pieces = myBlokus.pieces();
 
-// piece fields: ['id', 'shape', 'used', 'numCells']
+// piece fields: ['id', 'player', 'shape', 'used', 'numCells']
 // e.g. {id: 5,
+//       player: 0,
 //       shape: [['X', 'O', 'O'],
 //               ['X', 'O', 'O'],
 //               ['X', 'X', 'O']],
 //       used: false,
+//       numCells: 4,
 //       }
 
 // board
@@ -59,9 +61,9 @@ const board = myBlokus.board();
 
 // 2D array of cells, each cell is the 'id' of a player or null
 // e.g. [[1,    null, 2,    2],
-         [1,    1,    null, 2],
-         [null, 3,    4,    4],
-         [3,    3,    3,    4]]
+//       [1,    1,    null, 2],
+//       [null, 3,    4,    4],
+//       [3,    3,    3,    4]]
 
 // turns
 
@@ -77,9 +79,9 @@ Placing a piece
 myBlokus.place({
   player: 1, // 'id' field of the player
   piece: 2, // 'id' field of the piece
-  flipped: false, // whether or not to horizontally reflect the piece
-  rotations: 3, // how many times to rotate the piece counterclockwise
-  position: {row: 0, col: 0}, // which cell of the board corresponds to the top left cell of the piece's 'shape'
+  flipped: false, // (optional) whether or not to horizontally reflect the piece
+  rotations: 3, // (optional) how many times to rotate the piece counterclockwise
+  position: {row: 0, col: 0}, // the board cell where the top left cell of the piece's 'shape' goes
 });
 
 // the 'shape' may have extra padding ('O's that aren't really necessary)
@@ -92,7 +94,7 @@ myBlokus.place({
 //    {success: true, positions: [{row: 3, col: 6}, ...]}
 // where 'positions' is a list of cells the placed piece now occupies
 
-// pass {probe: true} to the placement argument to check validity of the move without actually performing it
+// add {probe: true} to the placement argument to check validity of a move without actually performing it
 
 myBlokus.place({
   player: 1,
