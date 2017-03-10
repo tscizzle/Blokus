@@ -60,10 +60,10 @@ const pieces = myBlokus.pieces();
 const board = myBlokus.board();
 
 // 2D array of cells, each cell is the 'id' of a player or null
-// e.g. [[1,    null, 2,    2],
-//       [1,    1,    null, 2],
-//       [null, 3,    4,    4],
-//       [3,    3,    3,    4]]
+// e.g. [[0,    null, 1,    1],
+//       [0,    0,    null, 1],
+//       [null, 2,    3,    3],
+//       [2,    2,    2,    3]]
 
 // turns
 
