@@ -17,12 +17,14 @@ const Game = (options = {}) => {
 
   const currentPlayer = function() {
     const turns = this.turns();
-    return turns.length > 0 ? (turns[turns.length - 1].player + 1) % 4 : 0;
+    const players = gameBlokus.players();
+    const playerID = turns.length > 0 ? (turns[turns.length - 1].player + 1) % 4 : 0;
+    const player = _.find(players, {id: playerID});
+    return player;
   };
 
   const place = function({piece, flipped = false, rotations = 0, position, probe = false}) {
-    const player = this.currentPlayer();
-    const placement = {player, piece, flipped, rotations, position, probe};
+    const placement = {player: this.currentPlayer().id, piece, flipped, rotations, position, probe};
 
     const placementResult = gameBlokus._place(placement);
     if (!probe) {

@@ -37,7 +37,7 @@ describe('game.js', function() {
       const g = game();
       const currentPlayer = g.currentPlayer();
 
-      assert.equal(currentPlayer, 0);
+      assert.deepEqual(currentPlayer, {id: 0, name: 'Player 0'});
     });
 
     it('should increment the player after a turn is taken', function() {
@@ -45,7 +45,7 @@ describe('game.js', function() {
       g.place({piece: 0, position: {row: 0, col: 0}});
       const currentPlayer = g.currentPlayer();
 
-      assert.equal(currentPlayer, 1);
+      assert.deepEqual(currentPlayer, {id: 1, name: 'Player 1'});
     });
 
     it('should wrap back around to player 0 after player 4', function() {
@@ -56,7 +56,7 @@ describe('game.js', function() {
       g.place({piece: 0, position: {row: 19, col: 0}});
       const currentPlayer = g.currentPlayer();
 
-      assert.equal(currentPlayer, 0);
+      assert.deepEqual(currentPlayer, {id: 0, name: 'Player 0'});
     });
 
   });
