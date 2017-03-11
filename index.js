@@ -2,7 +2,7 @@ const blokus = require('./blokus/blokus');
 const game = require('./game/game');
 
 
-module.exports {
+module.exports = {
   blokus,
   game,
 };
