@@ -19,30 +19,10 @@ const Blokus = (options = {}) => {
   const turns = [];
 
   /*
-   * State-modifying methods
-   * - need to be able to reference the internal objects directly
+   * Methods
    */
 
   const place = getPlaceFunction(pieces, board, turns);
-
-  /*
-   * Helpful read-only methods
-   * - only reference `this`, instead of the internal objects directly
-   * - for `this` to be the blokus instance, use function keyword instead of arrow functions
-   */
-
-  const currentPlayer = function() {
-    const turns = this.turns();
-    return turns.length > 0 ? (turns[turns.length - 1].player + 1) % 4 : 0;
-  };
-
-  const availablePieces = function({player, numCells}) {
-    const pieceFilter = {player, 'used': false};
-    if (_.isNumber(numCells)) {
-      pieceFilter.numCells = numCells;
-    }
-    return _.filter(this.pieces(), pieceFilter);
-  };
 
   const look = function() {
     const playerBackgrounds = ['bgGreen', 'bgRed', 'bgBlue', 'bgYellow'];
@@ -65,8 +45,6 @@ const Blokus = (options = {}) => {
     pieces: () => _.cloneDeep(pieces),
     board: () => _.cloneDeep(board),
     turns: () => _.cloneDeep(turns),
-    currentPlayer,
-    availablePieces,
     place,
     look,
   };

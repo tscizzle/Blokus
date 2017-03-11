@@ -1,8 +1,8 @@
 {
   "name": "blokus",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The game, \"Blokus\", in Javascript",
-  "main": "blokus.js",
+  "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/mocha"
   },
