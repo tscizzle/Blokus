@@ -1,5 +1,5 @@
-const blokus = require('./blokus');
-const game = require('./game');
+const blokus = require('./blokus/blokus');
+const game = require('./game/game');
 
 
 module.exports {

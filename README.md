@@ -64,13 +64,6 @@ const board = myBlokus.board();
 //       [0,    0,    null, 1],
 //       [null, 2,    3,    3],
 //       [2,    2,    2,    3]]
-
-// turns
-
-const turns = myBlokus.turns();
-
-// turn fields: ['player', 'piece', 'flipped', 'rotations', 'position']
-// e.g. {player: 0, piece: 5, flipped: true, rotations: 2, position: {row: 4, col: 7}}
 ```
 
 Placing a piece

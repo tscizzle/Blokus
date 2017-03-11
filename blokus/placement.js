@@ -71,7 +71,7 @@ const validatePiece = piece => {
   if (piece.used) return 'PieceAlreadyUsed';
 };
 
-const validatePlacementPositions = (positions, board, player, turns) => {
+const validatePlacementPositions = (positions, board, player) => {
   const anyPositionsOutOfBounds = _.some(positions, pos => isOutOfBounds(pos, board));
   if (anyPositionsOutOfBounds) return 'OutOfBounds';
 
@@ -81,8 +81,8 @@ const validatePlacementPositions = (positions, board, player, turns) => {
   const anyPositionsAdjacentToSamePlayer = _.some(positions, pos => isAdjacentToSamePlayer(pos, board, player));
   if (anyPositionsAdjacentToSamePlayer) return 'AdjacentToSamePlayer';
 
-  const isPlayersFirstMove = _.isUndefined(_.find(turns, {player}));
-  if (!isPlayersFirstMove) {
+  const isFirstTurn = !_.some(board, row => _.some(row, cell => cell === player));
+  if (!isFirstTurn) {
     const noPositionsDiagonalFromSamePlayer = !_.some(positions, pos => isDiagonalFromSamePlayer(pos, board, player));
     if (noPositionsDiagonalFromSamePlayer) return 'NotDiagonalFromSamePlayer';
   } else {
@@ -91,20 +91,18 @@ const validatePlacementPositions = (positions, board, player, turns) => {
   }
 };
 
-const getPlaceFunction = (pieces, board, turns) => {
+const getPlaceFunction = (pieces, board) => {
   const placeFunction = ({player, piece, flipped = false, rotations = 0, position, probe = false}) => {
     const matchingPiece = _.find(pieces, {id: piece, player});
     const pieceValidation = validatePiece(matchingPiece);
     if (_.isString(pieceValidation)) return {failure: true, message: pieceValidation};
 
     const placementPositions = getPlacementPositions(matchingPiece, flipped, rotations, position);
-    const placementPositionsValidation = validatePlacementPositions(placementPositions, board, player, turns);
+    const placementPositionsValidation = validatePlacementPositions(placementPositions, board, player);
     if (_.isString(placementPositionsValidation)) return {failure: true, message: placementPositionsValidation};
 
     if (!probe) {
       _.each(placementPositions, ({row, col}) => board[row][col] = player);
-      const placement = _.cloneDeep({player, piece, flipped, rotations, position});
-      turns.push(placement);
       matchingPiece.used = true;
     }
     return {success: true, positions: placementPositions};

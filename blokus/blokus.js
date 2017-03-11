@@ -16,15 +16,14 @@ const Blokus = (options = {}) => {
 
   const pieces = generatePieces();
   const board = generateBoard(height, width);
-  const turns = [];
 
   /*
    * Methods
    */
 
-  const place = getPlaceFunction(pieces, board, turns);
+  const _place = getPlaceFunction(pieces, board);
 
-  const availablePieces = function({player, numCells}) => {
+  const availablePieces = function({player, numCells}) {
     const pieceFilter = {player, 'used': false};
     if (_.isNumber(numCells)) {
       pieceFilter.numCells = numCells;
@@ -52,8 +51,7 @@ const Blokus = (options = {}) => {
     players: () => _.cloneDeep(players),
     pieces: () => _.cloneDeep(pieces),
     board: () => _.cloneDeep(board),
-    turns: () => _.cloneDeep(turns),
-    place,
+    _place,
     availablePieces,
     look,
   };
