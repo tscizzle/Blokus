@@ -24,6 +24,14 @@ const Blokus = (options = {}) => {
 
   const place = getPlaceFunction(pieces, board, turns);
 
+  const availablePieces = function({player, numCells}) => {
+    const pieceFilter = {player, 'used': false};
+    if (_.isNumber(numCells)) {
+      pieceFilter.numCells = numCells;
+    }
+    return _.filter(this.pieces(), pieceFilter);
+  };
+
   const look = function() {
     const playerBackgrounds = ['bgGreen', 'bgRed', 'bgBlue', 'bgYellow'];
     const playerColors = ['green', 'red', 'blue', 'yellow'];
@@ -46,6 +54,7 @@ const Blokus = (options = {}) => {
     board: () => _.cloneDeep(board),
     turns: () => _.cloneDeep(turns),
     place,
+    availablePieces,
     look,
   };
 };

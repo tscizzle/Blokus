@@ -19,12 +19,10 @@ const Game = (options = {}) => {
     return turns.length > 0 ? (turns[turns.length - 1].player + 1) % 4 : 0;
   };
 
-  const availablePieces = ({player, numCells}) => {
-    const pieceFilter = {player, 'used': false};
-    if (_.isNumber(numCells)) {
-      pieceFilter.numCells = numCells;
-    }
-    return _.filter(gameBlokus.pieces(), pieceFilter);
+  const place = ({piece, flipped = false, rotations = 0, position, probe = false}) => {
+    const placement = {piece, flipped, rotations, position, probe};
+    placement.player = currentPlayer();
+    return gameBlokus.place(placement);
   };
 
   /*
@@ -34,7 +32,6 @@ const Game = (options = {}) => {
   return {
     blokus: gameBlokus,
     currentPlayer,
-    availablePieces,
     place,
   };
 };
