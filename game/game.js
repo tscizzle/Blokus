@@ -1,6 +1,8 @@
 const _ = require('lodash');
 
 const blokus = require('../blokus/blokus');
+const { flip,
+        rotate } = require('../blokus/transform');
 
 
 const Game = (options = {}) => {
@@ -48,6 +50,8 @@ const Game = (options = {}) => {
     currentPlayer,
     availablePieces: gameBlokus.availablePieces,
     place,
+    flip,
+    rotate,
   };
 };
 
