@@ -7,10 +7,11 @@ const index = require('../index');
 describe('index.js', function() {
 
   it('should load', function() {
-    const { game, blokus } = index;
+    const { transform, blokus, game } = index;
 
-    assert.isOk(game);
+    assert.isOk(transform);
     assert.isOk(blokus);
+    assert.isOk(game);
   });
 
 });
