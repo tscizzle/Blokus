@@ -268,7 +268,7 @@ describe('blokus.js', function() {
       it('should reflect the piece horizontally', function() {
         const b = blokus();
         b._place({player: 0, piece: 0, position: {row: 0, col: 0}});
-        const { positions } = b._place({player: 0, piece: 18, flipped: true, position: {row: 1, col: 0}});
+        const { positions } = b._place({player: 0, piece: 18, flipped: true, position: {row: 1, col: 1}});
 
         const expectedPositions = [
           {row: 1, col: 1},
@@ -287,7 +287,7 @@ describe('blokus.js', function() {
       it('should rotate the piece a quarter rotation counterclockwise', function() {
         const b = blokus();
         b._place({player: 0, piece: 0, position: {row: 0, col: 0}});
-        const { positions } = b._place({player: 0, piece: 18, rotations: 1, position: {row: 0, col: 1}});
+        const { positions } = b._place({player: 0, piece: 18, rotations: 1, position: {row: 1, col: 1}});
 
         const expectedPositions = [
           {row: 1, col: 1},
@@ -302,7 +302,7 @@ describe('blokus.js', function() {
       it('should be able to do multiple rotations', function() {
         const b = blokus();
         b._place({player: 0, piece: 0, position: {row: 0, col: 0}});
-        const { positions } = b._place({player: 0, piece: 18, rotations: 2, position: {row: 0, col: 0}});
+        const { positions } = b._place({player: 0, piece: 18, rotations: 2, position: {row: 0, col: 1}});
 
         const expectedPositions = [
           {row: 0, col: 2},

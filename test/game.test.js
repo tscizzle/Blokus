@@ -265,7 +265,7 @@ describe('game.js', function() {
         ];
         _.each(placements, placement => g.place(placement));
 
-        const { positions } = g.place({piece: 18, flipped: true, position: {row: 1, col: 0}});
+        const { positions } = g.place({piece: 18, flipped: true, position: {row: 1, col: 1}});
 
         const expectedPositions = [
           {row: 1, col: 1},
@@ -290,7 +290,7 @@ describe('game.js', function() {
           {piece: 0, position: {row: 19, col: 0}},
         ];
         _.each(placements, placement => g.place(placement));
-        const { positions } = g.place({piece: 18, rotations: 1, position: {row: 0, col: 1}});
+        const { positions } = g.place({piece: 18, rotations: 1, position: {row: 1, col: 1}});
 
         const expectedPositions = [
           {row: 1, col: 1},
@@ -311,7 +311,7 @@ describe('game.js', function() {
           {piece: 0, position: {row: 19, col: 0}},
         ];
         _.each(placements, placement => g.place(placement));
-        const { positions } = g.place({piece: 18, rotations: 2, position: {row: 0, col: 0}});
+        const { positions } = g.place({piece: 18, rotations: 2, position: {row: 0, col: 1}});
 
         const expectedPositions = [
           {row: 0, col: 2},

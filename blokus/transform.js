@@ -2,9 +2,9 @@ const _ = require('lodash');
 
 
 const flip = shape => {
-  const dimension = shape.length;
+  const width = shape[0].length;
   const flippedShape = _.cloneDeep(shape);
-  _.each(shape, (row, rowIdx) => _.each(row, (cell, colIdx) => flippedShape[rowIdx][dimension - 1 - colIdx] = cell));
+  _.each(shape, (row, rowIdx) => _.each(row, (cell, colIdx) => flippedShape[rowIdx][width - 1 - colIdx] = cell));
   return flippedShape;
 };
 
@@ -37,11 +37,37 @@ const rotateOnce = shape => {
 };
 
 const rotate = (shape, rotations = 0) => {
+  shape = padToSquare(shape);
   rotations = mod(rotations, 4);
-  let rotatedShape = shape;
-  _.times(rotations, () => rotatedShape = rotateOnce(rotatedShape));
-  return rotatedShape;
+  _.times(rotations, () => shape = rotateOnce(shape));
+  shape = unpadFromSquare(shape);
+  return shape;
 };
+
+
+const padToSquare = shape => {
+  let height = shape.length;
+  let width = shape[0].length;
+  while (height > width) {
+    _.each(shape, row => row.push('O'));
+    width = shape[0].length;
+  }
+  while (width > height) {
+    shape.push(_.range(width).fill('O'));
+    height = shape.length;
+  }
+  return shape;
+}
+
+const unpadFromSquare = shape => {
+  // remove rows of all O's
+  shape = _.filter(shape, row => _.some(row, cell => cell === 'X'));
+  // remove columns of all O's
+  const width = shape[0].length;
+  const columnsToRemove = _.filter(_.range(width), colIdx => _.every(shape, row => row[colIdx] === 'O'));
+  shape = _.map(shape, row => _.reject(row, (cell, colIdx) => _.includes(columnsToRemove, colIdx)));
+  return shape;
+}
 
 
 // for handling negative rotations, need a mod operation which handles negative n correctly
