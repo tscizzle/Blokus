@@ -87,6 +87,15 @@ myBlokus.place({
 // otherwise, 'place' places the piece on the board and returns an object of form:
 //    {success: true, positions: [{row: 3, col: 6}, ...]}
 // where 'positions' is a list of cells the placed piece now occupies
+
+// possible failure messages
+// 'PieceDoesNotExist'
+// 'PieceAlreadyUsed'
+// 'OutOfBounds'
+// 'Taken'
+// 'AdjacentToSamePlayer'
+// 'NotDiagonalFromSamePlayer'
+// 'NotInCorner'
 ```
 
 
