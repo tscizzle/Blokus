@@ -45,8 +45,8 @@ const Game = (options = {}) => {
     pieces: gameBlokus.pieces,
     board: gameBlokus.board,
     turns: () => _.cloneDeep(turns),
-    currentPlayer,
     availablePieces: gameBlokus.availablePieces,
+    currentPlayer,
     place,
   };
 };

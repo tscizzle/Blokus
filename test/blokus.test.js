@@ -352,4 +352,37 @@ describe('blokus.js', function() {
 
   });
 
+  describe('getting available pieces', function() {
+
+    it('should get all of a player\'s unused pieces', function() {
+      const b = blokus();
+      const originalPieces = b.availablePieces({player: 0});
+
+      assert.lengthOf(originalPieces, 21);
+      assert.include(_.map(originalPieces, 'id'), 0);
+
+      b._place({player: 0, piece: 0, position: {row: 0, col: 0}});
+      const remainingPieces = b.availablePieces({player: 0});
+
+      assert.lengthOf(remainingPieces, 20);
+      assert.notInclude(_.map(remainingPieces, 'id'), 0);
+    });
+
+    it('should filter a player\'s pieces by number of cells', function() {
+      const b = blokus();
+      const piecesWith1Cell = b.availablePieces({player: 0, numCells: 1});
+      const piecesWith2Cell = b.availablePieces({player: 1, numCells: 2});
+      const piecesWith3Cell = b.availablePieces({player: 2, numCells: 3});
+      const piecesWith4Cell = b.availablePieces({player: 3, numCells: 4});
+      const piecesWith5Cell = b.availablePieces({player: 0, numCells: 5});
+
+      assert.lengthOf(piecesWith1Cell, 1);
+      assert.lengthOf(piecesWith2Cell, 1);
+      assert.lengthOf(piecesWith3Cell, 2);
+      assert.lengthOf(piecesWith4Cell, 5);
+      assert.lengthOf(piecesWith5Cell, 12);
+    });
+
+  });
+
 });
