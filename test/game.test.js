@@ -37,7 +37,7 @@ describe('game.js', function() {
       const g = game();
       const currentPlayer = g.currentPlayer();
 
-      assert.deepEqual(currentPlayer, {id: 0, name: 'Player 0'});
+      assert.deepEqual(currentPlayer, {id: 0, name: 'Player 0', hasPassed: false});
     });
 
     it('should increment the player after a turn is taken', function() {
@@ -45,7 +45,7 @@ describe('game.js', function() {
       g.place({piece: 0, position: {row: 0, col: 0}});
       const currentPlayer = g.currentPlayer();
 
-      assert.deepEqual(currentPlayer, {id: 1, name: 'Player 1'});
+      assert.deepEqual(currentPlayer, {id: 1, name: 'Player 1', hasPassed: false});
     });
 
     it('should wrap back around to player 0 after player 4', function() {
@@ -56,7 +56,7 @@ describe('game.js', function() {
       g.place({piece: 0, position: {row: 19, col: 0}});
       const currentPlayer = g.currentPlayer();
 
-      assert.deepEqual(currentPlayer, {id: 0, name: 'Player 0'});
+      assert.deepEqual(currentPlayer, {id: 0, name: 'Player 0', hasPassed: false});
     });
 
   });
@@ -98,7 +98,7 @@ describe('game.js', function() {
 
       assert.lengthOf(turns, 1);
       assert.deepEqual(turns, [
-        {player: 0, piece: 0, flipped: false, rotations: 0, position: {row: 0, col: 0}},
+        {player: 0, piece: 0, flipped: false, rotations: 0, position: {row: 0, col: 0}, probe: false, isPass: false},
       ]);
     });
 
@@ -144,7 +144,7 @@ describe('game.js', function() {
       const newBoard = g.board();
 
       assert.isTrue(failure);
-      assert.equal(message, 'OutOfBounds');
+      assert.equal(message, 'PositionOutOfBounds');
       assert.deepEqual(oldBoard, newBoard);
     });
 
@@ -156,7 +156,7 @@ describe('game.js', function() {
       const newBoard = g.board();
 
       assert.isTrue(failure);
-      assert.equal(message, 'Taken');
+      assert.equal(message, 'PositionTaken');
       assert.deepEqual(oldBoard, newBoard);
     });
 
@@ -172,7 +172,7 @@ describe('game.js', function() {
       const newBoard = g.board();
 
       assert.isTrue(failure);
-      assert.equal(message, 'NotInCorner');
+      assert.equal(message, 'PositionNotInCorner');
       assert.deepEqual(oldBoard, newBoard);
     });
 
@@ -200,7 +200,7 @@ describe('game.js', function() {
       const newBoard = g.board();
 
       assert.isTrue(failure);
-      assert.equal(message, 'NotDiagonalFromSamePlayer');
+      assert.equal(message, 'PositionNotDiagonalFromSamePlayer');
       assert.deepEqual(oldBoard, newBoard);
     });
 
@@ -210,7 +210,7 @@ describe('game.js', function() {
       const newBoard = g.board();
 
       assert.isTrue(failure);
-      assert.equal(message, 'AdjacentToSamePlayer');
+      assert.equal(message, 'PositionAdjacentToSamePlayer');
       assert.deepEqual(oldBoard, newBoard);
     });
 
@@ -246,7 +246,7 @@ describe('game.js', function() {
       const newBoard = g.board();
 
       assert.isTrue(failure);
-      assert.equal(message, 'OutOfBounds');
+      assert.equal(message, 'PositionOutOfBounds');
     });
 
   });

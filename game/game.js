@@ -61,6 +61,7 @@ const Game = (options = {}) => {
     availablePieces: gameBlokus.availablePieces,
     currentPlayer,
     place,
+    pass,
   };
 };
 

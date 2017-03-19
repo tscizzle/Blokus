@@ -83,7 +83,7 @@ myBlokus.place({
 // this is fine as long as the piece (the 'X's) are all in valid positions
 
 // if the placement is invalid, 'place' returns an object of the form:
-//    {failure: true, message: 'NotDiagonalFromSamePlayer'}
+//    {failure: true, message: 'PositionNotDiagonalFromSamePlayer'}
 // otherwise, 'place' places the piece on the board and returns an object of form:
 //    {success: true, positions: [{row: 3, col: 6}, ...]}
 // where 'positions' is a list of cells the placed piece now occupies

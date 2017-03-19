@@ -25,10 +25,10 @@ describe('blokus.js', function() {
 
         assert.lengthOf(players, 4);
         assert.deepEqual(players, [
-          {id: 0, name: 'Player 0'},
-          {id: 1, name: 'Player 1'},
-          {id: 2, name: 'Player 2'},
-          {id: 3, name: 'Player 3'},
+          {id: 0, name: 'Player 0', hasPassed: false},
+          {id: 1, name: 'Player 1', hasPassed: false},
+          {id: 2, name: 'Player 2', hasPassed: false},
+          {id: 3, name: 'Player 3', hasPassed: false},
         ]);
       });
 
@@ -38,10 +38,10 @@ describe('blokus.js', function() {
 
         assert.lengthOf(players, 4);
         assert.deepEqual(players, [
-          {id: 0, name: 'Jill'},
-          {id: 1, name: 'Bob'},
-          {id: 2, name: 'Player 2'},
-          {id: 3, name: 'Player 3'},
+          {id: 0, name: 'Jill', hasPassed: false},
+          {id: 1, name: 'Bob', hasPassed: false},
+          {id: 2, name: 'Player 2', hasPassed: false},
+          {id: 3, name: 'Player 3', hasPassed: false},
         ]);
       });
 
@@ -156,7 +156,7 @@ describe('blokus.js', function() {
       const newBoard = b.board();
 
       assert.isTrue(failure);
-      assert.equal(message, 'OutOfBounds');
+      assert.equal(message, 'PositionOutOfBounds');
       assert.deepEqual(oldBoard, newBoard);
     });
 
@@ -166,7 +166,7 @@ describe('blokus.js', function() {
       const newBoard = b.board();
 
       assert.isTrue(failure);
-      assert.equal(message, 'Taken');
+      assert.equal(message, 'PositionTaken');
       assert.deepEqual(oldBoard, newBoard);
     });
 
@@ -182,7 +182,7 @@ describe('blokus.js', function() {
       const newBoard = b.board();
 
       assert.isTrue(failure);
-      assert.equal(message, 'NotInCorner');
+      assert.equal(message, 'PositionNotInCorner');
       assert.deepEqual(oldBoard, newBoard);
     });
 
@@ -210,7 +210,7 @@ describe('blokus.js', function() {
       const newBoard = b.board();
 
       assert.isTrue(failure);
-      assert.equal(message, 'NotDiagonalFromSamePlayer');
+      assert.equal(message, 'PositionNotDiagonalFromSamePlayer');
       assert.deepEqual(oldBoard, newBoard);
     });
 
@@ -220,7 +220,7 @@ describe('blokus.js', function() {
       const newBoard = b.board();
 
       assert.isTrue(failure);
-      assert.equal(message, 'AdjacentToSamePlayer');
+      assert.equal(message, 'PositionAdjacentToSamePlayer');
       assert.deepEqual(oldBoard, newBoard);
     });
 
@@ -256,7 +256,7 @@ describe('blokus.js', function() {
       const newBoard = b.board();
 
       assert.isTrue(failure);
-      assert.equal(message, 'OutOfBounds');
+      assert.equal(message, 'PositionOutOfBounds');
     });
 
   });
@@ -381,6 +381,23 @@ describe('blokus.js', function() {
       assert.lengthOf(piecesWith3Cell, 2);
       assert.lengthOf(piecesWith4Cell, 5);
       assert.lengthOf(piecesWith5Cell, 12);
+    });
+
+  });
+
+  describe('setting that a player has passed', function() {
+
+    it('should mark a player as having passed', function() {
+      const b = blokus();
+      b.setPlayerPassed({player: 0});
+      const players = b.players();
+
+      assert.deepEqual(players, [
+        {id: 0, name: 'Player 0', hasPassed: true},
+        {id: 1, name: 'Player 1', hasPassed: false},
+        {id: 2, name: 'Player 2', hasPassed: false},
+        {id: 3, name: 'Player 3', hasPassed: false},
+      ]);
     });
 
   });
