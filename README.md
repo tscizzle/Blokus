@@ -89,13 +89,14 @@ myBlokus.place({
 // where 'positions' is a list of cells the placed piece now occupies
 
 // possible failure messages
+// 'PlayerHasPassed'
 // 'PieceDoesNotExist'
 // 'PieceAlreadyUsed'
-// 'OutOfBounds'
-// 'Taken'
-// 'AdjacentToSamePlayer'
-// 'NotDiagonalFromSamePlayer'
-// 'NotInCorner'
+// 'PositionOutOfBounds'
+// 'PositionTaken'
+// 'PositionAdjacentToSamePlayer'
+// 'PositionNotDiagonalFromSamePlayer'
+// 'PositionNotInCorner'
 ```
 
 

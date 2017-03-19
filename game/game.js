@@ -23,17 +23,30 @@ const Game = (options = {}) => {
     return player;
   };
 
-  const place = function({piece, flipped = false, rotations = 0, position, probe = false}) {
-    const placement = {player: this.currentPlayer().id, piece, flipped, rotations, position, probe};
+  const place = function({piece, flipped = false, rotations = 0, position, probe = false, isPass = false}) {
+    const currentPlayer = this.currentPlayer();
 
-    const placementResult = gameBlokus.place(placement);
+    if (currentPlayer.hasPassed) {
+      return {failure: true, message: 'PlayerHasPassed'};
+    }
+
+    const placement = {player: currentPlayer.id, piece, flipped, rotations, position, probe, isPass};
+
+    const placementResult = isPass ? {success: true} : gameBlokus.place(placement);
     if (!probe) {
       if (placementResult.success) {
-        const turn = _.cloneDeep(_.omit(placement, 'probe'));
+        const turn = _.cloneDeep(placement);
         turns.push(turn);
       }
     }
     return placementResult;
+  };
+
+  const pass = function() {
+    const placement = {piece: null, flipped: null, rotations: null, position: null, isPass: true};
+    this.place(placement);
+
+    gameBlokus.setPlayerPassed({player: this.currentPlayer().id});
   };
 
   /*

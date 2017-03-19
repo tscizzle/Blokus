@@ -5,7 +5,7 @@ const { pieceCollection } = require('./pieces');
 
 const processOptions = ({height = 20, width = 20, players = []}) => {
   players = _.map(_.range(4), playerID => {
-    return {id: playerID, name: players[playerID] || `Player ${playerID}`};
+    return {id: playerID, name: players[playerID] || `Player ${playerID}`, hasPassed: false};
   });
   return {height, width, players};
 };

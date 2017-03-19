@@ -1,5 +1,4 @@
 const _ = require('lodash');
-const colors = require('colors');
 
 const { processOptions,
         generatePieces,
@@ -31,16 +30,9 @@ const Blokus = (options = {}) => {
     return _.filter(this.pieces(), pieceFilter);
   };
 
-  const look = function() {
-    const playerBackgrounds = ['bgGreen', 'bgRed', 'bgBlue', 'bgYellow'];
-    const playerColors = ['green', 'red', 'blue', 'yellow'];
-    const coloredPlayerCell = cell => colors[playerBackgrounds[cell]][playerColors[cell]]('  ');
-    const nullCell = '()'.bgWhite.black;
-
-    const getCellString = cell => !_.isNull(cell) ? coloredPlayerCell(cell) : nullCell;
-    const getRowString = row => _.map(row, getCellString).join('');
-    const boardString = _.map(this.board(), getRowString).join('\n');
-    console.log(boardString);
+  const setPlayerPassed = function({player}) {
+    const playerThatPassed = _.find(players, {id: player});
+    playerThatPassed.hasPassed = true;
   };
 
   /*
@@ -53,7 +45,7 @@ const Blokus = (options = {}) => {
     board: () => _.cloneDeep(board),
     place,
     availablePieces,
-    look,
+    setPlayerPassed,
   };
 };
 

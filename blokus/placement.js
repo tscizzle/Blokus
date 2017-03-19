@@ -73,21 +73,21 @@ const validatePiece = piece => {
 
 const validatePlacementPositions = (positions, board, player) => {
   const anyPositionsOutOfBounds = _.some(positions, pos => isOutOfBounds(pos, board));
-  if (anyPositionsOutOfBounds) return 'OutOfBounds';
+  if (anyPositionsOutOfBounds) return 'PositionOutOfBounds';
 
   const anyTakenPositions = _.some(positions, pos => isTaken(pos, board));
-  if (anyTakenPositions) return 'Taken';
+  if (anyTakenPositions) return 'PositionTaken';
 
   const anyPositionsAdjacentToSamePlayer = _.some(positions, pos => isAdjacentToSamePlayer(pos, board, player));
-  if (anyPositionsAdjacentToSamePlayer) return 'AdjacentToSamePlayer';
+  if (anyPositionsAdjacentToSamePlayer) return 'PositionAdjacentToSamePlayer';
 
   const isFirstTurn = !_.some(board, row => _.some(row, cell => cell === player));
   if (!isFirstTurn) {
     const noPositionsDiagonalFromSamePlayer = !_.some(positions, pos => isDiagonalFromSamePlayer(pos, board, player));
-    if (noPositionsDiagonalFromSamePlayer) return 'NotDiagonalFromSamePlayer';
+    if (noPositionsDiagonalFromSamePlayer) return 'PositionNotDiagonalFromSamePlayer';
   } else {
     const noPositionsInCorner = !_.some(positions, pos => isInCorner(pos, board));
-    if (noPositionsInCorner) return 'NotInCorner';
+    if (noPositionsInCorner) return 'PositionNotInCorner';
   }
 };
 
@@ -95,11 +95,15 @@ const getPlaceFunction = (pieces, board) => {
   const placeFunction = ({player, piece, flipped = false, rotations = 0, position, probe = false}) => {
     const matchingPiece = _.find(pieces, {id: piece, player});
     const pieceValidation = validatePiece(matchingPiece);
-    if (_.isString(pieceValidation)) return {failure: true, message: pieceValidation};
+    if (_.isString(pieceValidation)) {
+      return {failure: true, message: pieceValidation};
+    }
 
     const placementPositions = getPlacementPositions(matchingPiece, flipped, rotations, position);
     const placementPositionsValidation = validatePlacementPositions(placementPositions, board, player);
-    if (_.isString(placementPositionsValidation)) return {failure: true, message: placementPositionsValidation};
+    if (_.isString(placementPositionsValidation)) {
+      return {failure: true, message: placementPositionsValidation};
+    }
 
     if (!probe) {
       _.each(placementPositions, ({row, col}) => board[row][col] = player);
