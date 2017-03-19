@@ -11,6 +11,9 @@ Installation
 Usage
 -----
 
+THESE DOCS ARE OUT OF DATE. STAY TUNED FOR DOCS ON THE NEW `game` OBJECT WHICH
+WRAPS THE `blokus` OBJECT AND SHOULD BE USED IN ITS PLACE.
+
 ```javascript
 const blokus = require('blokus');
 ```
