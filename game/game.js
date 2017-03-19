@@ -18,21 +18,24 @@ const Game = (options = {}) => {
   const currentPlayer = function() {
     const turns = this.turns();
     const players = gameBlokus.players();
-    const playerID = turns.length > 0 ? (turns[turns.length - 1].player + 1) % 4 : 0;
-    const player = _.find(players, {id: playerID});
+
+    if (_.every(players, 'hasPassed')) {
+      return null;
+    }
+
+    let playerID = turns.length > 0 ? (turns[turns.length - 1].player + 1) % 4 : 0;
+    let player = _.find(players, {id: playerID});
+    while (player.hasPassed) {
+      playerID = (playerID + 1) % 4;
+      player = _.find(players, {id: playerID});
+    }
     return player;
   };
 
-  const place = function({piece, flipped = false, rotations = 0, position, probe = false, isPass = false}) {
-    const currentPlayer = this.currentPlayer();
+  const place = function({piece, flipped = false, rotations = 0, position, probe = false, _isPass = false}) {
+    const placement = {player: this.currentPlayer().id, piece, flipped, rotations, position, probe, isPass: _isPass};
 
-    if (currentPlayer.hasPassed) {
-      return {failure: true, message: 'PlayerHasPassed'};
-    }
-
-    const placement = {player: currentPlayer.id, piece, flipped, rotations, position, probe, isPass};
-
-    const placementResult = isPass ? {success: true} : gameBlokus.place(placement);
+    const placementResult = _isPass ? {success: true} : gameBlokus.place(placement);
     if (!probe) {
       if (placementResult.success) {
         const turn = _.cloneDeep(placement);
@@ -44,7 +47,7 @@ const Game = (options = {}) => {
 
   const pass = function() {
     const currentPlayer = this.currentPlayer();
-    const placement = {piece: null, flipped: null, rotations: null, position: null, isPass: true};
+    const placement = {piece: null, flipped: null, rotations: null, position: null, _isPass: true};
     const placementResult = this.place(placement);
 
     gameBlokus.setPlayerPassed({player: currentPlayer.id});

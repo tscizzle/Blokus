@@ -59,6 +59,18 @@ describe('game.js', function() {
       assert.deepEqual(currentPlayer, {id: 0, name: 'Player 0', hasPassed: false});
     });
 
+    it('should skip players who have passed', function() {
+      const g = game();
+      g.place({piece: 0, position: {row: 0, col: 0}});
+      g.pass({piece: 0, position: {row: 0, col: 19}});
+      g.place({piece: 0, position: {row: 19, col: 19}});
+      g.place({piece: 0, position: {row: 19, col: 0}});
+      g.place({piece: 1, position: {row: 1, col: 1}});
+      const currentPlayer = g.currentPlayer();
+
+      assert.deepEqual(currentPlayer, {id: 2, name: 'Player 2', hasPassed: false});
+    });
+
   });
 
   describe('making a placement', function() {
@@ -398,19 +410,6 @@ describe('game.js', function() {
         {id: 2, name: 'Player 2', hasPassed: false},
         {id: 3, name: 'Player 3', hasPassed: false},
       ]);
-    });
-
-    it('should not allow a player to take a turn after having passed', function() {
-      const g = game();
-      g.place({piece: 0, position: {row: 0, col: 0}});
-      g.pass();
-      g.place({piece: 0, position: {row: 0, col: 19}});
-      g.place({piece: 0, position: {row: 19, col: 19}});
-      g.place({piece: 1, position: {row: 1, col: 1}});
-      const { failure, message } = g.place({piece: 0, position: {row: 19, col: 0}});
-
-      assert.isTrue(failure);
-      assert.equal(message, 'PlayerHasPassed');
     });
 
   });
