@@ -43,10 +43,13 @@ const Game = (options = {}) => {
   };
 
   const pass = function() {
+    const currentPlayer = this.currentPlayer();
     const placement = {piece: null, flipped: null, rotations: null, position: null, isPass: true};
-    this.place(placement);
+    const placementResult = this.place(placement);
 
-    gameBlokus.setPlayerPassed({player: this.currentPlayer().id});
+    gameBlokus.setPlayerPassed({player: currentPlayer.id});
+
+    return placementResult;
   };
 
   /*

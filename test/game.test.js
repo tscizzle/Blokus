@@ -373,4 +373,46 @@ describe('game.js', function() {
 
   });
 
+  describe('passing a turn', function() {
+
+    it('should save the pass as a turn', function() {
+      const g = game();
+      g.pass();
+      const turns = g.turns();
+
+      assert.lengthOf(turns, 1);
+      assert.deepEqual(turns, [
+        {player: 0, piece: null, flipped: null, rotations: null, position: null, probe: false, isPass: true},
+      ]);
+    });
+
+    it('should mark the current player as having passed', function() {
+      const g = game();
+      g.place({piece: 0, position: {row: 0, col: 0}})
+      g.pass();
+      const players = g.players();
+
+      assert.deepEqual(players, [
+        {id: 0, name: 'Player 0', hasPassed: false},
+        {id: 1, name: 'Player 1', hasPassed: true},
+        {id: 2, name: 'Player 2', hasPassed: false},
+        {id: 3, name: 'Player 3', hasPassed: false},
+      ]);
+    });
+
+    it('should not allow a player to take a turn after having passed', function() {
+      const g = game();
+      g.place({piece: 0, position: {row: 0, col: 0}});
+      g.pass();
+      g.place({piece: 0, position: {row: 0, col: 19}});
+      g.place({piece: 0, position: {row: 19, col: 19}});
+      g.place({piece: 1, position: {row: 1, col: 1}});
+      const { failure, message } = g.place({piece: 0, position: {row: 19, col: 0}});
+
+      assert.isTrue(failure);
+      assert.equal(message, 'PlayerHasPassed');
+    });
+
+  });
+
 });
