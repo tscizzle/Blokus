@@ -21,7 +21,7 @@ const Blokus = (options = {}) => {
    * Methods
    */
 
-  const _place = getPlaceFunction(pieces, board);
+  const place = getPlaceFunction(pieces, board);
 
   const availablePieces = function({player, numCells}) {
     const pieceFilter = {player, 'used': false};
@@ -51,7 +51,7 @@ const Blokus = (options = {}) => {
     players: () => _.cloneDeep(players),
     pieces: () => _.cloneDeep(pieces),
     board: () => _.cloneDeep(board),
-    _place,
+    place,
     availablePieces,
     look,
   };

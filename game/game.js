@@ -26,7 +26,7 @@ const Game = (options = {}) => {
   const place = function({piece, flipped = false, rotations = 0, position, probe = false}) {
     const placement = {player: this.currentPlayer().id, piece, flipped, rotations, position, probe};
 
-    const placementResult = gameBlokus._place(placement);
+    const placementResult = gameBlokus.place(placement);
     if (!probe) {
       if (placementResult.success) {
         const turn = _.cloneDeep(_.omit(placement, 'probe'));

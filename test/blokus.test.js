@@ -103,7 +103,7 @@ describe('blokus.js', function() {
   describe('making a placement', function() {
 
     const b = blokus();
-    const { success, positions } = b._place({player: 0, piece: 3, position: {row: 0, col: 0}});
+    const { success, positions } = b.place({player: 0, piece: 3, position: {row: 0, col: 0}});
     const pieces = b.pieces();
     const board = b.board();
 
@@ -132,7 +132,7 @@ describe('blokus.js', function() {
 
     it('should not be able to place a piece that doesn\'t exist', function() {
       const oldBoard = b.board();
-      const { failure, message } = b._place({player: 0, piece: 100, position: {row: 1, col: 1}});
+      const { failure, message } = b.place({player: 0, piece: 100, position: {row: 1, col: 1}});
       const newBoard = b.board();
 
       assert.isTrue(failure);
@@ -142,7 +142,7 @@ describe('blokus.js', function() {
 
     it('should not be able to place a piece that was already used', function() {
       const oldBoard = b.board();
-      const { failure, message } = b._place({player: 0, piece: 3, position: {row: 1, col: 1}});
+      const { failure, message } = b.place({player: 0, piece: 3, position: {row: 1, col: 1}});
       const newBoard = b.board();
 
       assert.isTrue(failure);
@@ -152,7 +152,7 @@ describe('blokus.js', function() {
 
     it('should not be able to place a piece with any cells out of bounds', function() {
       const oldBoard = b.board();
-      const { failure, message } = b._place({player: 0, piece: 1, position: {row: 19, col: 0}});
+      const { failure, message } = b.place({player: 0, piece: 1, position: {row: 19, col: 0}});
       const newBoard = b.board();
 
       assert.isTrue(failure);
@@ -162,7 +162,7 @@ describe('blokus.js', function() {
 
     it('should not be able to place a piece on top of another piece', function() {
       const oldBoard = b.board();
-      const { failure, message } = b._place({player: 0, piece: 0, position: {row: 0, col: 0}});
+      const { failure, message } = b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
       const newBoard = b.board();
 
       assert.isTrue(failure);
@@ -178,7 +178,7 @@ describe('blokus.js', function() {
 
     it('should not be able to place a piece anywhere but the corner', function() {
       const oldBoard = b.board();
-      const { failure, message } = b._place({player: 0, piece: 0, position: {row: 1, col: 0}});
+      const { failure, message } = b.place({player: 0, piece: 0, position: {row: 1, col: 0}});
       const newBoard = b.board();
 
       assert.isTrue(failure);
@@ -197,16 +197,16 @@ describe('blokus.js', function() {
       {player: 2, piece: 0, position: {row: 19, col: 19}},
       {player: 3, piece: 0, position: {row: 19, col: 0}},
     ];
-    _.each(placements, placement => b._place(placement));
+    _.each(placements, placement => b.place(placement));
 
     it('should be able to place a piece diagonal from one of the player\'s previous pieces', function() {
-      const { success } = b._place({player: 0, piece: 1, position: {row: 1, col: 1}});
+      const { success } = b.place({player: 0, piece: 1, position: {row: 1, col: 1}});
       assert.isTrue(success);
     });
 
     it('should not be able to place a piece somewhere not diagonal from one of the player\'s previous pieces', function() {
       const oldBoard = b.board();
-      const { failure, message } = b._place({player: 1, piece: 1, position: {row: 1, col: 17}});
+      const { failure, message } = b.place({player: 1, piece: 1, position: {row: 1, col: 17}});
       const newBoard = b.board();
 
       assert.isTrue(failure);
@@ -216,7 +216,7 @@ describe('blokus.js', function() {
 
     it('should not be able to place a piece that shares a border with one of the player\'s previous pieces', function() {
       const oldBoard = b.board();
-      const { failure, message } = b._place({player: 1, piece: 1, position: {row: 0, col: 18}});
+      const { failure, message } = b.place({player: 1, piece: 1, position: {row: 0, col: 18}});
       const newBoard = b.board();
 
       assert.isTrue(failure);
@@ -233,7 +233,7 @@ describe('blokus.js', function() {
     it('should give the usual success response but not change the game state', function() {
       const oldPieces = b.pieces();
       const oldBoard = b.board();
-      const { success, positions } = b._place({player: 0, piece: 3, position: {row: 0, col: 0}, probe: true});
+      const { success, positions } = b.place({player: 0, piece: 3, position: {row: 0, col: 0}, probe: true});
       const newPieces = b.pieces();
       const newBoard = b.board();
 
@@ -251,7 +251,7 @@ describe('blokus.js', function() {
     it('should give the usual failure response', function() {
       const oldPieces = b.pieces();
       const oldBoard = b.board();
-      const { failure, message } = b._place({player: 0, piece: 3, position: {row: 20, col: 0}, probe: true});
+      const { failure, message } = b.place({player: 0, piece: 3, position: {row: 20, col: 0}, probe: true});
       const newPieces = b.pieces();
       const newBoard = b.board();
 
@@ -267,8 +267,8 @@ describe('blokus.js', function() {
 
       it('should reflect the piece horizontally', function() {
         const b = blokus();
-        b._place({player: 0, piece: 0, position: {row: 0, col: 0}});
-        const { positions } = b._place({player: 0, piece: 18, flipped: true, position: {row: 1, col: 1}});
+        b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
+        const { positions } = b.place({player: 0, piece: 18, flipped: true, position: {row: 1, col: 1}});
 
         const expectedPositions = [
           {row: 1, col: 1},
@@ -286,8 +286,8 @@ describe('blokus.js', function() {
 
       it('should rotate the piece a quarter rotation counterclockwise', function() {
         const b = blokus();
-        b._place({player: 0, piece: 0, position: {row: 0, col: 0}});
-        const { positions } = b._place({player: 0, piece: 18, rotations: 1, position: {row: 1, col: 1}});
+        b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
+        const { positions } = b.place({player: 0, piece: 18, rotations: 1, position: {row: 1, col: 1}});
 
         const expectedPositions = [
           {row: 1, col: 1},
@@ -301,8 +301,8 @@ describe('blokus.js', function() {
 
       it('should be able to do multiple rotations', function() {
         const b = blokus();
-        b._place({player: 0, piece: 0, position: {row: 0, col: 0}});
-        const { positions } = b._place({player: 0, piece: 18, rotations: 2, position: {row: 0, col: 1}});
+        b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
+        const { positions } = b.place({player: 0, piece: 18, rotations: 2, position: {row: 0, col: 1}});
 
         const expectedPositions = [
           {row: 0, col: 2},
@@ -316,8 +316,8 @@ describe('blokus.js', function() {
 
       it('should be able to do negative rotations', function() {
         const b = blokus();
-        b._place({player: 0, piece: 0, position: {row: 0, col: 0}});
-        const { positions } = b._place({player: 0, piece: 18, rotations: -1, position: {row: 1, col: 1}});
+        b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
+        const { positions } = b.place({player: 0, piece: 18, rotations: -1, position: {row: 1, col: 1}});
 
         const expectedPositions = [
           {row: 1, col: 1},
@@ -335,8 +335,8 @@ describe('blokus.js', function() {
 
       it('should first flip a piece and then rotate it (this order matters)', function() {
         const b = blokus();
-        b._place({player: 0, piece: 0, position: {row: 0, col: 0}});
-        const { positions } = b._place({player: 0, piece: 18, flipped: true, rotations: 1, position: {row: 1, col: 1}});
+        b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
+        const { positions } = b.place({player: 0, piece: 18, flipped: true, rotations: 1, position: {row: 1, col: 1}});
 
         const expectedPositions = [
           {row: 1, col: 1},
@@ -361,7 +361,7 @@ describe('blokus.js', function() {
       assert.lengthOf(originalPieces, 21);
       assert.include(_.map(originalPieces, 'id'), 0);
 
-      b._place({player: 0, piece: 0, position: {row: 0, col: 0}});
+      b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
       const remainingPieces = b.availablePieces({player: 0});
 
       assert.lengthOf(remainingPieces, 20);
