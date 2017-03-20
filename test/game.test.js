@@ -414,4 +414,51 @@ describe('game.js', function() {
 
   });
 
+  describe('checking if the game is over', function() {
+
+    it('should say the game is not over if any players have not passed yet', function() {
+      const g = game();
+      g.place({piece: 0, position: {row: 0, col: 0}});
+      g.pass();
+      g.pass();
+      g.pass();
+      g.place({piece: 1, position: {row: 1, col: 1}});
+      const isOver = g.isOver();
+
+      assert.isFalse(isOver);
+    });
+
+    it('should say the game is over if all players have passed', function() {
+      const g = game();
+      g.place({piece: 0, position: {row: 0, col: 0}});
+      g.pass();
+      g.pass();
+      g.pass();
+      g.place({piece: 1, position: {row: 1, col: 1}});
+      g.pass();
+      const isOver = g.isOver();
+
+      assert.isTrue(isOver);
+    });
+
+  });
+
+  describe('getting each player\'s remaining squares', function() {
+
+    it('should total the number of squares in each of the player\'s remaining pieces', function() {
+      const g = game();
+      const player0OriginalCells = g.numRemaining({player: 0});
+      const player1OriginalCells = g.numRemaining({player: 1});
+      g.place({piece: 1, position: {row: 0, col: 0}});
+      const player0RemainingCells = g.numRemaining({player: 0});
+      const player1RemainingCells = g.numRemaining({player: 1});
+
+      assert.equal(player0OriginalCells, 89);
+      assert.equal(player1OriginalCells, 89);
+      assert.equal(player0RemainingCells, 87);
+      assert.equal(player1RemainingCells, 89);
+    });
+
+  });
+
 });

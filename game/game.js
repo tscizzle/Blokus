@@ -55,6 +55,16 @@ const Game = (options = {}) => {
     return placementResult;
   };
 
+  const isOver = function() {
+    return _.isNull(this.currentPlayer());
+  };
+
+  const numRemaining = function({player}) {
+    const pieces = this.availablePieces({player});
+    const totalCells = _.sumBy(pieces, 'numCells');
+    return totalCells;
+  };
+
   /*
    * Game API
    */
@@ -68,6 +78,8 @@ const Game = (options = {}) => {
     currentPlayer,
     place,
     pass,
+    isOver,
+    numRemaining,
   };
 };
 
