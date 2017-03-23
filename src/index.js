@@ -1,4 +1,5 @@
-const transform = { flip, rotate } = require('./blokus/transform');
+const transform = require('./blokus/transform');
+const { flip, rotate } = transform;
 const blokus = require('./blokus/blokus');
 const game = require('./game/game');
 
