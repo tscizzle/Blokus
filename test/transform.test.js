@@ -2,7 +2,7 @@ const chai = require('chai');
 const assert = chai.assert;
 const _ = require('lodash');
 
-const transform = { flip, rotate } = require('../blokus/transform');
+const transform = { flip, rotate } = require('../src/blokus/transform');
 
 
 describe('transform.js', function() {

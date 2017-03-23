@@ -1,7 +1,7 @@
 const chai = require('chai');
 const assert = chai.assert;
 
-const index = require('../index');
+const index = require('../src/index');
 
 
 describe('index.js', function() {

@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const { assertPositionsEqual,
         assertBoardState,     } = require('./testHelpers');
-const game = require('../game/game');
+const game = require('../src/game/game');
 
 
 describe('game.js', function() {

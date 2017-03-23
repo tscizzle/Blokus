@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const { assertPositionsEqual,
         assertBoardState,     } = require('./testHelpers');
-const blokus = require('../blokus/blokus');
+const blokus = require('../src/blokus/blokus');
 
 
 describe('blokus.js', function() {

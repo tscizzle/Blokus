@@ -1,10 +1,12 @@
 {
   "name": "blokus",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "The game, \"Blokus\", in Javascript",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha"
+    "test": "node_modules/.bin/mocha",
+    "build": "babel src --out-dir lib",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -16,6 +18,9 @@
   "author": "Tyler Singer-Clark",
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-core": "^6.24.0",
+    "babel-preset-latest": "^6.24.0",
     "chai": "^3.5.0",
     "mocha": "^3.2.0"
   },
