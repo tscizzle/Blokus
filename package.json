@@ -1,6 +1,6 @@
 {
   "name": "blokus",
-  "version": "0.0.10",
+  "version": "0.0.12",
   "description": "The game, \"Blokus\", in Javascript",
   "main": "lib/index.js",
   "scripts": {
