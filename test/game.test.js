@@ -123,7 +123,7 @@ describe('game.js', function() {
       assert.isTrue(matchingPiece.used);
     });
 
-    it('should place the left-most square of the piece\'s top row at the user\'s position', function() {
+    it('should place the anchor point (left-most square of the piece\'s top row) at the user\'s position', function() {
       const g = game();
       g.place({piece: 0, position: {row: 0, col: 0}});
       g.place({piece: 0, position: {row: 0, col: 19}});

@@ -130,7 +130,7 @@ describe('blokus.js', function() {
       assert.isTrue(matchingPiece.used);
     });
 
-    it('should place the left-most square of the piece\'s top row at the user\'s position', function() {
+    it('should place the anchor point (left-most square of the piece\'s top row) at the user\'s position', function() {
       const { success, positions } = b.place({player: 0, piece: 14, position: {row: 2, col: 2}});
       const expectedPositions = [
         {row: 2, col: 2},

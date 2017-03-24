@@ -4,7 +4,7 @@ const { flip,
         rotate } = require('./transform');
 
 
-// Position is the top-left-most X.
+// Anchor point is left-most X of piece's top row.
 const getShapePositions = (shape, position) => {
   const shapePositions = [];
   var leftCol = null;
