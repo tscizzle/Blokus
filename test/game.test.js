@@ -123,6 +123,33 @@ describe('game.js', function() {
       assert.isTrue(matchingPiece.used);
     });
 
+    it('should place the left-most square of the piece\'s top row at the user\'s position', function() {
+      const g = game();
+      g.place({piece: 0, position: {row: 0, col: 0}});
+      g.place({piece: 0, position: {row: 0, col: 19}});
+      g.place({piece: 0, position: {row: 19, col: 0}});
+      g.place({piece: 0, position: {row: 19, col: 19}});
+      const roundOnePositions = [
+        {row: 0, col: 0},
+        {row: 0, col: 19},
+        {row: 19, col: 0},
+        {row: 19, col: 19},
+      ]
+
+      const { positions } = g.place({piece: 14, position: {row: 1, col: 1}});
+      const board = g.board();
+
+      const expectedPositions = [
+        {row: 1, col: 1},
+        {row: 2, col: 0},
+        {row: 2, col: 1},
+        {row: 2, col: 2},
+        {row: 3, col: 1},
+      ];
+      assertPositionsEqual(positions, expectedPositions);
+      assertBoardState(board, expectedPositions.concat(roundOnePositions));
+    });
+
     it('should not be able to place a piece that doesn\'t exist', function() {
       const g = game();
       const oldBoard = g.board();
@@ -323,7 +350,7 @@ describe('game.js', function() {
           {piece: 0, position: {row: 19, col: 0}},
         ];
         _.each(placements, placement => g.place(placement));
-        const { positions } = g.place({piece: 18, rotations: 2, position: {row: 0, col: 1}});
+        const { positions } = g.place({piece: 18, rotations: 2, position: {row: 0, col: 2}});
 
         const expectedPositions = [
           {row: 0, col: 2},

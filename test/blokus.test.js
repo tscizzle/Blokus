@@ -130,6 +130,18 @@ describe('blokus.js', function() {
       assert.isTrue(matchingPiece.used);
     });
 
+    it('should place the left-most square of the piece\'s top row at the user\'s position', function() {
+      const { success, positions } = b.place({player: 0, piece: 14, position: {row: 2, col: 2}});
+      const expectedPositions = [
+        {row: 2, col: 2},
+        {row: 3, col: 1},
+        {row: 3, col: 2},
+        {row: 3, col: 3},
+        {row: 4, col: 2},
+      ];
+      assertPositionsEqual(positions, expectedPositions);
+    });
+
     it('should not be able to place a piece that doesn\'t exist', function() {
       const oldBoard = b.board();
       const { failure, message } = b.place({player: 0, piece: 100, position: {row: 1, col: 1}});
@@ -302,7 +314,7 @@ describe('blokus.js', function() {
       it('should be able to do multiple rotations', function() {
         const b = blokus();
         b.place({player: 0, piece: 0, position: {row: 0, col: 0}});
-        const { positions } = b.place({player: 0, piece: 18, rotations: 2, position: {row: 0, col: 1}});
+        const { positions } = b.place({player: 0, piece: 18, rotations: 2, position: {row: 0, col: 2}});
 
         const expectedPositions = [
           {row: 0, col: 2},

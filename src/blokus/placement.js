@@ -4,11 +4,16 @@ const { flip,
         rotate } = require('./transform');
 
 
+// Position is the top-left-most X.
 const getShapePositions = (shape, position) => {
   const shapePositions = [];
+  var leftCol = null;
   _.each(shape, (row, rowIdx) => _.each(row, (cell, colIdx) => {
     if (cell === 'X') {
-      shapePositions.push({row: position.row + rowIdx, col: position.col + colIdx});
+      if (_.isNull(leftCol)) {
+        leftCol = position.col - colIdx;
+      }
+      shapePositions.push({row: position.row + rowIdx, col: leftCol + colIdx});
     }
   }));
   return shapePositions;
