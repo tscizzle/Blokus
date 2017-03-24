@@ -7,7 +7,7 @@ const { flip,
 // Anchor point is left-most X of piece's top row.
 const getShapePositions = (shape, position) => {
   const shapePositions = [];
-  var leftCol = null;
+  let leftCol = null;
   _.each(shape, (row, rowIdx) => _.each(row, (cell, colIdx) => {
     if (cell === 'X') {
       if (_.isNull(leftCol)) {
