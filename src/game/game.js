@@ -32,8 +32,14 @@ const Game = (options = {}) => {
     return player;
   };
 
-  const place = function({piece, flipped = false, rotations = 0, position, probe = false, _isPass = false}) {
-    const placement = {player: this.currentPlayer().id, piece, flipped, rotations, position, probe, isPass: _isPass};
+  const place = function({player = null, piece, flipped = false, rotations = 0, position, probe = false, _isPass = false}) {
+    if (!_.isNull(player) && !probe) {
+      return {failure: true, message: 'MustProbeIfSpecifyPlayer'};
+    }
+
+    player = !_.isNull(player) ? player : this.currentPlayer().id;
+
+    const placement = {player, piece, flipped, rotations, position, probe, isPass: _isPass};
 
     const placementResult = _isPass ? {success: true} : gameBlokus.place(placement);
     if (!probe) {

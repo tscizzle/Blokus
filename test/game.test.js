@@ -199,6 +199,17 @@ describe('game.js', function() {
       assert.deepEqual(oldBoard, newBoard);
     });
 
+    it('should not be able to place a piece when a player is specified', function() {
+      const g = game();
+      const oldBoard = g.board();
+      const { failure, message } = g.place({player: 0, piece: 0, position: {row: 0, col: 0}});
+      const newBoard = g.board();
+
+      assert.isTrue(failure);
+      assert.equal(message, 'MustProbeIfSpecifyPlayer');
+      assert.deepEqual(oldBoard, newBoard);
+    });
+
   });
 
   describe('making a first placement', function() {
@@ -257,9 +268,8 @@ describe('game.js', function() {
 
   describe('probing a placement', function() {
 
-    const g = game();
-
     it('should give the usual success response but not change the game state', function() {
+      const g = game();
       const oldPieces = g.pieces();
       const oldBoard = g.board();
       const { success, positions } = g.place({piece: 3, position: {row: 0, col: 0}, probe: true});
@@ -278,6 +288,7 @@ describe('game.js', function() {
     });
 
     it('should give the usual failure response', function() {
+      const g = game();
       const oldPieces = g.pieces();
       const oldBoard = g.board();
       const { failure, message } = g.place({piece: 3, position: {row: 20, col: 0}, probe: true});
@@ -286,6 +297,24 @@ describe('game.js', function() {
 
       assert.isTrue(failure);
       assert.equal(message, 'PositionOutOfBounds');
+    });
+
+    it('should be able to specify a non-current player with which to probe', function() {
+      const g = game();
+      g.place({piece: 0, position: {row: 0, col: 0}});
+      g.place({piece: 0, position: {row: 0, col: 19}});
+      g.place({piece: 0, position: {row: 19, col: 19}});
+      const { success, positions } = g.place({player: 0, piece: 1, position: {row: 1, col: 1}, probe: true});
+      const { failure, message } = g.place({player: 1, piece: 1, position: {row: 1, col: 1}, probe: true});
+
+      assert.isTrue(success);
+      const expectedPositions = [
+        {row: 1, col: 1},
+        {row: 2, col: 1},
+      ];
+      assertPositionsEqual(positions, expectedPositions);
+      assert.isTrue(failure);
+      assert.equal(message, 'PositionNotDiagonalFromSamePlayer');
     });
 
   });
