@@ -182,6 +182,17 @@ describe('blokus.js', function() {
       assert.deepEqual(oldBoard, newBoard);
     });
 
+    it('should return positions even when the placement is in an invalid spot', function() {
+      const { failure, message, positions } = b.place({player: 0, piece: 1, position: {row: 0, col: 0}});
+
+      assert.isTrue(failure);
+      const expectedPositions = [
+        {row: 0, col: 0},
+        {row: 1, col: 0},
+      ];
+      assertPositionsEqual(positions, expectedPositions);
+    });
+
   });
 
   describe('making a first placement', function() {

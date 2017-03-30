@@ -107,7 +107,7 @@ const getPlaceFunction = (pieces, board) => {
     const placementPositions = getPlacementPositions(matchingPiece, flipped, rotations, position);
     const placementPositionsValidation = validatePlacementPositions(placementPositions, board, player);
     if (_.isString(placementPositionsValidation)) {
-      return {failure: true, message: placementPositionsValidation};
+      return {failure: true, message: placementPositionsValidation, positions: placementPositions};
     }
 
     if (!probe) {
